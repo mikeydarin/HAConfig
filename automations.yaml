@@ -1,0 +1,78 @@
+- id: '1543786522058'
+  alias: SensorStatusChange
+  trigger:
+  - entity_id: binary_sensor.house_to_garage_door
+    platform: state
+  - entity_id: binary_sensor.exterior_garage_door
+    platform: state
+  - entity_id: binary_sensor.front_door
+    platform: state
+  - entity_id: binary_sensor.great_room_windows
+    platform: state
+  - entity_id: binary_sensor.living_room_windows
+    platform: state
+  - entity_id: binary_sensor.master_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.middle_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.office_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.sliding_back_door
+    platform: state
+  - entity_id: binary_sensor.street_bedroom
+    platform: state
+  - entity_id: binary_sensor.swinging_back_door
+    platform: state
+  condition: []
+  action:
+  - alias: ''
+    data:
+      entity_id: switch.beep_beep
+    service: switch.turn_on
+- id: '1543786522059'
+  alias: Bedbell
+  trigger:
+  - entity_id: binary_sensor.house_to_garage_door
+    platform: state
+  - entity_id: binary_sensor.exterior_garage_door
+    platform: state
+  - entity_id: binary_sensor.front_door
+    platform: state
+  - entity_id: binary_sensor.great_room_windows
+    platform: state
+  - entity_id: binary_sensor.living_room_windows
+    platform: state
+  - entity_id: binary_sensor.master_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.middle_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.office_bedroom_window
+    platform: state
+  - entity_id: binary_sensor.sliding_back_door
+    platform: state
+  - entity_id: binary_sensor.street_bedroom
+    platform: state
+  - entity_id: binary_sensor.swinging_back_door
+    platform: state
+  condition:
+  - after: '20:00:00'
+    before: 06:00:00
+    condition: time
+  action:
+  - alias: ''
+    data:
+      entity_id: switch.bedroom_bell
+    service: switch.turn_on
+- id: '1548560031670'
+  alias: GarageDoorOpen
+  trigger:
+  - entity_id: binary_sensor.garage_door
+    for: 00:10:00
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      message: Garage Door has been open 10 minutes.
+    service: notify.pushnotify_michaelsphone

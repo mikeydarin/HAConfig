@@ -1,0 +1,53 @@
+exterior_doors:
+  name: Doors
+  icon: mdi:door
+  entities:
+    - binary_sensor.front_door
+    - binary_sensor.garage_door
+    - binary_sensor.house_to_garage_door
+    - binary_sensor.sliding_back_door
+    - binary_sensor.swinging_back_door
+    - binary_sensor.exterior_garage_door
+windows:
+  name: Windows
+  icon: mdi:windows
+  view: false
+  entities:
+    - binary_sensor.great_room_windows
+    - binary_sensor.living_room_windows
+    - binary_sensor.master_bedroom_window
+    - binary_sensor.middle_bedroom_window
+    - binary_sensor.office_bedroom_window
+    - binary_sensor.street_bedroom
+climate:
+  name: Climate
+  icon: mdi:snowflake
+  view: False
+  entities:
+    - climate.thermostat
+    - weather.thermostat
+    - sensor.bedroom_temperature
+    - sensor.front_bedroom_temperature
+    - sensor.kids_room_temperature
+    - sensor.kitchen_temperature
+    - sensor.office_temperature
+    - sensor.thermostat_temperature
+awesome_people:
+  name: Family Leadership
+  icon: mdi:account-multiple
+  view: false
+  entities:
+    - device_tracker.life360_michael
+    - device_tracker.life360_haylee
+Switches:
+  name: Switches
+  icon: mdi:dip-switch
+  view: True
+  entities:
+    - switch.bedroom_bell
+    - switch.beep_beep
+    - switch.christmas_tree
+    - switch.first_plug
+    - switch.garage_switch
+    - switch.siren_chirps
+    - automation.sensorstatuschange

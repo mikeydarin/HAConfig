@@ -1,0 +1,246 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 377
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Phoenix
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+system_health:
+
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+#  base_url: casareynolds.duckdns.org:8123
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
+  trusted_networks:
+    - 192.168.0.0/24
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+#updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Sensors
+sensor:
+  # Weather prediction
+  - platform: yr
+  # Internet speed checking
+  - platform: fastdotcom
+  
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+group: !include groups.yaml
+automation: !include_dir_list automations
+script: !include scripts.yaml
+
+#adding Configurator to HA Panel
+panel_iframe:
+  configurator: 
+    title: Configurator 
+    icon: mdi:wrench 
+    url: http://192.168.0.118:3218/
+    
+
+#Konnected Zone and Device Configuration
+konnected:
+  access_token: !secret konnected_token
+  devices:
+    - id: !secret mac_id_k1
+      host: 192.168.0.191
+      port: 11308
+      binary_sensors:
+        - zone: 1
+          type: door
+          name: 'Front Door'
+        - zone: 2
+          type: door
+          name: 'Swinging Back Door'
+        - zone: 3
+          type: window
+          name: 'Great Room Windows'
+        - zone: 4
+          type: window
+          name: 'Master Bedroom Window'
+        - zone: 5
+          type: window
+          name: 'Office Bedroom Window'
+        - zone: 6
+          type: window
+          name: 'Middle Bedroom Window'
+      switches:
+        - zone: out
+          name: 'siren chirp'
+          momentary: 65
+          pause: 55
+          repeat: 4  
+        - zone: out
+          name: 'siren'
+    - id: !secret mac_id_k2
+      host: 192.168.0.190
+      port: 22085
+      binary_sensors:
+        - zone: 1
+          type: window
+          name: 'Street Bedroom'
+        - zone: 2
+          type: window
+          name: 'Living Room Windows'
+        - zone: 3
+          type: door
+          name: 'House to Garage Door'
+        - zone: 4
+          type: door
+          name: 'Sliding Back Door'
+        - zone: 6
+          type: door
+          name: 'Exterior Garage Door'
+      switches:
+        - zone: 5
+          name: 'Beep Beep'
+          momentary: 65
+          pause: 55
+          repeat: 4  
+        - zone: 5
+          name: 'Warning'
+          momentary: 65
+          pause: 55
+          repeat: -1  
+    - id: !secret mac_id_k3
+      host: 192.168.0.192
+      port: 9540
+      binary_sensors:
+        - zone: 2
+          type: garage_door
+          name: 'Garage Door'
+          inverse: true
+      switches:
+        - zone: 1
+          name: 'Garage Switch'
+          momentary: 400
+    - id: !secret mac_id_k4
+      host: 192.168.0.194
+      port: 21011
+      switches:
+        - zone: 1
+          name: 'Bedroom Bell'
+          momentary: 5250
+
+#enabling ifttt
+ifttt:
+  key: !secret ifttt_key
+
+#enabling ecobee
+ecobee:
+  api_key: !secret ecobee_key
+
+#tplink switches
+switch:
+  - platform: tplink
+    host: 192.168.0.180
+  - platform: tplink
+    host: 192.168.0.181
+
+
+#Life360 Custom Component Implementation
+
+device_tracker:
+  - platform: life360
+    username: !secret life360_username
+    password: !secret life360_password
+    prefix: life360
+    show_as_state: driving, moving, places
+    driving_speed: 18
+    max_gps_accuracy: 200
+    max_update_wait:
+      minutes: 45
+
+#Enabling Manual Alarm
+alarm_control_panel:
+  - platform: manual
+    name: "house alarm"
+    code: !secret house_alarm_code
+    trigger_time: 600
+    armed_home:
+      pending_time: 0
+      delay_time: 0
+    armed_away:
+      pending_time: 90
+      delay_time: 90
+    armed_night:
+      pending_time: 0
+      delay_time: 30
+    disarmed:
+      delay_time: 0
+    triggered:
+      pending_time: 0
+      
+#logger:
+#  default: info
+
+notify:
+  - platform: html5
+    name: PushNotify
+    gcm_api_key: !secret gcm_api_key
+    gcm_sender_id: !secret gcm_sender_id
+    
+media_player:
+  - platform: alexa
+    email: !secret amazon_email
+    password: !secret amazon_pw
+    url: amazon.com
+    exclude_devices:
+    - "This Device"
+    - "Michael's Fire"
+    - "Michael's 2nd Fire"
+    - "Michael's 3rd Fire"
+    - "Michael's 4th Fire"
+    - "Michael's Alexa Apps"
+    - "Haylee's Alexa Apps"
+    - "Haylee's 2nd Fire"
+    - "My Dash"
+    
+#roku:

@@ -1,0 +1,16 @@
+alias: GarageDoorOpen
+trigger:
+- entity_id: binary_sensor.garage_door
+  for: 00:10:00
+  from: 'off'
+  platform: state
+  to: 'on'
+condition: []
+action:
+- service: notify.pushnotify_michaelsphone
+  data:
+    message: Garage Door has been open 10 minutes.
+    data:
+      actions:
+      - action: close_garage
+        title: Close it
