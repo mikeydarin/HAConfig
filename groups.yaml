@@ -51,3 +51,12 @@ Switches:
     - switch.garage_switch
     - switch.siren_chirps
     - automation.sensorstatuschange
+
+sensor_node_1_card:  
+  name: Sensor Node 1  
+  entities:  
+    - sensor.sn1_temperature  
+    - sensor.sn1_humidity  
+    - sensor.sn1_ldr  
+    - sensor.sn1_pir  
+    - light.sn1_led

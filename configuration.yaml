@@ -65,6 +65,32 @@ sensor:
   - platform: yr
   # Internet speed checking
   - platform: fastdotcom
+  #Bruh Multisensor Parts
+  - platform: mqtt  
+    state_topic: "bruh/sensornode1"  
+    name: "SN1 Humidity"  
+    unit_of_measurement: "%"  
+    value_template: '{{ value_json.humidity | round(1) }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode1"  
+    name: "SN1 LDR"
+    ##This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+    unit_of_measurement: "LUX"  
+    value_template: '{{ value_json.ldr }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode1"  
+    name: "SN1 PIR"  
+    value_template: '{{ value_json.motion }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode1"  
+    name: "SN1 Temperature"  
+    unit_of_measurement: "°F"  
+    value_template: '{{ value_json.temperature | round(1) }}'  
+  - platform: mqtt
+    state_topic: "bruh/sensornode1"
+    name: "SN1 Real Feel"
+    unit_of_measurement: "°F"
+    value_template: '{{ value_json.heatIndex | round(1) }}'
   
 # Text to speech
 tts:
@@ -244,3 +270,22 @@ media_player:
     - "My Dash"
     
 #roku:
+mqtt:  
+  broker: 192.168.0.118  
+  port: 1883  
+  client_id: home-assistant-1  
+  username: "mqtt"  
+  password: "mqtt"  
+
+light:  
+  - platform: mqtt
+    schema: json
+    name: "SN1 LED"  
+    state_topic: "bruh/sensornode1"  
+    command_topic: "bruh/sensornode1/set"  
+    brightness: true  
+    effect: true
+    effect_list: [flash] 
+    rgb: true  
+    optimistic: false  
+    qos: 0
