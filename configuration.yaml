@@ -12,6 +12,11 @@ homeassistant:
   time_zone: America/Phoenix
   # Customization file
   customize: !include customize.yaml
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks:
+        - 192.168.0.0/24
+        - fd00::/8
 
 # Show links to resources in log and frontend
 introduction:
@@ -25,12 +30,13 @@ system_health:
 
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-http:
+#http:
 #  base_url: casareynolds.duckdns.org:8123
 #  ssl_certificate: /ssl/fullchain.pem
 #  ssl_key: /ssl/privkey.pem
-  trusted_networks:
-    - 192.168.0.0/24
+#  trusted_networks:
+#    - 192.168.0.0/24
+
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -59,12 +65,14 @@ map:
 # Track the sun
 sun:
 
+fastdotcom:
+  scan_interval:
+      minutes: 30
+      
 # Sensors
 sensor:
   # Weather prediction
   - platform: yr
-  # Internet speed checking
-  - platform: fastdotcom
   #Bruh Multisensor Parts
   - platform: mqtt  
     state_topic: "bruh/sensornode1"  
@@ -170,11 +178,11 @@ konnected:
           momentary: 65
           pause: 55
           repeat: 4  
-        - zone: 5
-          name: 'Warning'
-          momentary: 65
-          pause: 55
-          repeat: -1  
+#        - zone: 5
+#          name: 'Warning'
+#          momentary: 65
+#          pause: 55
+#          repeat: -1  
     - id: !secret mac_id_k3
       host: 192.168.0.192
       port: 9540
@@ -204,25 +212,23 @@ ecobee:
   api_key: !secret ecobee_key
 
 #tplink switches
-switch:
-  - platform: tplink
-    host: 192.168.0.180
-  - platform: tplink
-    host: 192.168.0.181
-
+tplink:
+  switch:
+  - host: 192.168.0.180
+  - host: 192.168.0.181
 
 #Life360 Custom Component Implementation
-
-device_tracker:
-  - platform: life360
-    username: !secret life360_username
-    password: !secret life360_password
-    prefix: life360
-    show_as_state: driving, moving, places
-    driving_speed: 18
-    max_gps_accuracy: 200
-    max_update_wait:
-      minutes: 45
+#
+#device_tracker:
+#  - platform: life360
+#    username: !secret life360_username
+#    password: !secret life360_password
+#    prefix: life360
+#    show_as_state: driving, moving, places
+#    driving_speed: 18
+#    max_gps_accuracy: 200
+#    max_update_wait:
+#      minutes: 45
 
 #Enabling Manual Alarm
 alarm_control_panel:
@@ -252,22 +258,24 @@ notify:
     name: PushNotify
     gcm_api_key: !secret gcm_api_key
     gcm_sender_id: !secret gcm_sender_id
-    
-media_player:
-  - platform: alexa
-    email: !secret amazon_email
-    password: !secret amazon_pw
-    url: amazon.com
-    exclude_devices:
-    - "This Device"
-    - "Michael's Fire"
-    - "Michael's 2nd Fire"
-    - "Michael's 3rd Fire"
-    - "Michael's 4th Fire"
-    - "Michael's Alexa Apps"
-    - "Haylee's Alexa Apps"
-    - "Haylee's 2nd Fire"
-    - "My Dash"
+  - platform: alexa_media
+    name: alexa_media
+
+alexa_media:
+  accounts:
+    - email: !secret amazon_email
+      password: !secret amazon_pw
+      url: amazon.com
+      exclude_devices:
+      - "This Device"
+      - "Michael's Fire"
+      - "Michael's 2nd Fire"
+      - "Michael's 3rd Fire"
+      - "Michael's 4th Fire"
+      - "Michael's Alexa Apps"
+      - "Haylee's Alexa Apps"
+      - "Haylee's 2nd Fire"
+      - "My Dash"
     
 #roku:
 mqtt:  
@@ -289,3 +297,19 @@ light:
     rgb: true  
     optimistic: false  
     qos: 0
+  - platform: limitlessled
+    bridges:
+    - host: 192.168.0.182
+      groups:
+      - number: 1
+        type: white
+        name: KitchenLED1
+      - number: 2
+        type: white
+        name: KitchenLED2
+#      - number: 3
+#        type: white
+#        name: KitchenLED3
+#      - number: 4
+#        type: white
+#        name: KitchenLED4
