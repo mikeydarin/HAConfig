@@ -1,8 +1,50 @@
-close_garage:
-  alias: "Close the Garage Door"
-  sequence:
-  - condition: state
-    entity_id: binary_sensor.garage_door
-    state: 'on'
-  - service: switch.turn_on
-    entity_id: switch.garage_switch
+
+  close_garage:
+    alias: "Close the Garage Door"
+    sequence:
+    - condition: state
+      entity_id: binary_sensor.garage_door
+      state: 'on'
+    - service: switch.turn_on
+      entity_id: switch.garage_switch
+
+
+  traffic_yellow:
+    alias: "YELLOW"
+    sequence:
+    - service: switch.turn_on
+      entity_id: switch.traffic_red
+    - service: switch.turn_off
+      entity_id: switch.traffic_green
+    - service: switch.turn_off
+      entity_id: switch.traffic_yellow
+      
+  traffic_green:
+    alias: "GREEN"
+    sequence:
+    - service: switch.turn_on
+      entity_id: switch.traffic_yellow
+    - service: switch.turn_off
+      entity_id: switch.traffic_green
+    - service: switch.turn_off
+      entity_id: switch.traffic_red
+
+  traffic_red:
+    alias: "RED"
+    sequence:
+    - service: switch.turn_on
+      entity_id: switch.traffic_green
+    - service: switch.turn_off
+      entity_id: switch.traffic_red
+    - service: switch.turn_off
+      entity_id: switch.traffic_yellow
+      
+  traffic_off:
+    alias: "OFF"
+    sequence:
+    - service: switch.turn_off
+      entity_id: switch.traffic_green
+    - service: switch.turn_off
+      entity_id: switch.traffic_red
+    - service: switch.turn_off
+      entity_id: switch.traffic_yellow

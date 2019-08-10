@@ -32,13 +32,13 @@ climate:
     - sensor.kitchen_temperature
     - sensor.office_temperature
     - sensor.thermostat_temperature
-awesome_people:
-  name: Family Leadership
-  icon: mdi:account-multiple
-  view: false
-  entities:
-    - device_tracker.life360_michael
-    - device_tracker.life360_haylee
+#awesome_people:
+#  name: Family Leadership
+#  icon: mdi:account-multiple
+#  view: false
+#  entities:
+#    - device_tracker.michael
+#    - device_tracker.haylee
 Switches:
   name: Switches
   icon: mdi:dip-switch
@@ -60,3 +60,13 @@ sensor_node_1_card:
     - sensor.sn1_ldr  
     - sensor.sn1_pir  
     - light.sn1_led
+    
+    
+sensor_node_2_card:  
+  name: Sensor Node 2  
+  entities:  
+    - sensor.sn2_temperature  
+    - sensor.sn2_humidity  
+    - sensor.sn2_ldr  
+    - sensor.sn2_pir  
+    - light.sn2_led

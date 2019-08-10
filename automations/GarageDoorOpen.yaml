@@ -7,7 +7,7 @@ trigger:
   to: 'on'
 condition: []
 action:
-- service: notify.pushnotify_michaelsphone
+- service: notify.pushnotify_mdr_s9
   data:
     message: Garage Door has been open 10 minutes.
     data:

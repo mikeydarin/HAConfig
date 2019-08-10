@@ -1,0 +1,17 @@
+  - platform: manual
+    name: "house alarm"
+    code: !secret house_alarm_code
+    trigger_time: 600
+    armed_home:
+      pending_time: 0
+      delay_time: 0
+    armed_away:
+      pending_time: 90
+      delay_time: 90
+    armed_night:
+      pending_time: 0
+      delay_time: 30
+    disarmed:
+      delay_time: 0
+    triggered:
+      pending_time: 0

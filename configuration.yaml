@@ -1,69 +1,39 @@
 homeassistant:
-  # Name of the location where Home Assistant is running
   name: Home
-  # Location required to calculate the time the sun rises and sets
   latitude: !secret latitude
   longitude: !secret longitude
-  # Impacts weather/sunrise data (altitude above sea level in meters)
   elevation: 377
-  # metric for Metric, imperial for Imperial
   unit_system: imperial
-  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: America/Phoenix
-  # Customization file
   customize: !include customize.yaml
   auth_providers:
+    - type: homeassistant
     - type: trusted_networks
       trusted_networks:
-        - 192.168.0.0/24
+        - 192.168.50.0/24
         - fd00::/8
-
-# Show links to resources in log and frontend
-introduction:
-
-# Enables the frontend
 frontend:
-
-# Enables configuration UI
 config:
 system_health:
-
-
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-#http:
-#  base_url: casareynolds.duckdns.org:8123
-#  ssl_certificate: /ssl/fullchain.pem
-#  ssl_key: /ssl/privkey.pem
-#  trusted_networks:
-#    - 192.168.0.0/24
-
-
-# Checks for available updates
-# Note: This component will send some information about your system to
-# the developers to assist with development of Home Assistant.
-# For more information, please see:
-# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
-#updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
-  # include_used_components: true
-
-# Discover some devices automatically
+hacs:
+  token: dae23764f92a84ac50d214b0a78a437979719aee
+#custom_updater:
+#  track:
+#    - components
+#    - python_scripts
+#  component_urls:
+#    - https://raw.githubusercontent.com/keatontaylor/alexa_media_player/master/custom_components.json
+#    - https://raw.githubusercontent.com/pnbruckner/homeassistant-config/master/custom_components.json
+#  python_script_urls:
+#    - https://raw.githubusercontent.com/pnbruckner/homeassistant-config/master/python_scripts.json
+http:
 discovery:
-
-# Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
-
-# Enables support for tracking state changes over time
 history:
-
-# View all events in a logbook
 logbook:
-
-# Enables a map showing the location of tracked devices
 map:
-
-# Track the sun
 sun:
+cloud:
 
 fastdotcom:
   scan_interval:
@@ -99,165 +69,85 @@ sensor:
     name: "SN1 Real Feel"
     unit_of_measurement: "°F"
     value_template: '{{ value_json.heatIndex | round(1) }}'
-  
-# Text to speech
-tts:
-  - platform: google
 
-# Cloud
-cloud:
+  - platform: mqtt  
+    state_topic: "bruh/sensornode2"  
+    name: "SN2 Humidity"  
+    unit_of_measurement: "%"  
+    value_template: '{{ value_json.humidity | round(1) }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode2"  
+    name: "SN2 LDR"
+    ##This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+    unit_of_measurement: "LUX"  
+    value_template: '{{ value_json.ldr }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode2"  
+    name: "SN2 PIR"  
+    value_template: '{{ value_json.motion }}'  
+  - platform: mqtt  
+    state_topic: "bruh/sensornode2"  
+    name: "SN2 Temperature"  
+    unit_of_measurement: "°F"  
+    value_template: '{{ value_json.temperature | round(1) }}'  
+  - platform: mqtt
+    state_topic: "bruh/sensornode2"
+    name: "SN2 Real Feel"
+    unit_of_measurement: "°F"
+    value_template: '{{ value_json.heatIndex | round(1) }}'
+
+tts:
+  - platform: google_translate
+    service_name: google_say
 
 group: !include groups.yaml
 automation: !include_dir_list automations
 script: !include scripts.yaml
 
-#adding Configurator to HA Panel
+konnected: !include components/konnected.yaml
+alarm_control_panel: !include components/alarm.yaml
+
 panel_iframe:
   configurator: 
     title: Configurator 
     icon: mdi:wrench 
-    url: http://192.168.0.118:3218/
-    
+    url: http://192.168.50.118:8123/api/hassio_ingress/nVpz9UPGUO6kDTxxJR1TSEhwej1nnePGQg06uKPG3PE/
 
-#Konnected Zone and Device Configuration
-konnected:
-  access_token: !secret konnected_token
-  devices:
-    - id: !secret mac_id_k1
-      host: 192.168.0.191
-      port: 11308
-      binary_sensors:
-        - zone: 1
-          type: door
-          name: 'Front Door'
-        - zone: 2
-          type: door
-          name: 'Swinging Back Door'
-        - zone: 3
-          type: window
-          name: 'Great Room Windows'
-        - zone: 4
-          type: window
-          name: 'Master Bedroom Window'
-        - zone: 5
-          type: window
-          name: 'Office Bedroom Window'
-        - zone: 6
-          type: window
-          name: 'Middle Bedroom Window'
-      switches:
-        - zone: out
-          name: 'siren chirp'
-          momentary: 65
-          pause: 55
-          repeat: 4  
-        - zone: out
-          name: 'siren'
-    - id: !secret mac_id_k2
-      host: 192.168.0.190
-      port: 22085
-      binary_sensors:
-        - zone: 1
-          type: window
-          name: 'Street Bedroom'
-        - zone: 2
-          type: window
-          name: 'Living Room Windows'
-        - zone: 3
-          type: door
-          name: 'House to Garage Door'
-        - zone: 4
-          type: door
-          name: 'Sliding Back Door'
-        - zone: 6
-          type: door
-          name: 'Exterior Garage Door'
-      switches:
-        - zone: 5
-          name: 'Beep Beep'
-          momentary: 65
-          pause: 55
-          repeat: 4  
-#        - zone: 5
-#          name: 'Warning'
-#          momentary: 65
-#          pause: 55
-#          repeat: -1  
-    - id: !secret mac_id_k3
-      host: 192.168.0.192
-      port: 9540
-      binary_sensors:
-        - zone: 2
-          type: garage_door
-          name: 'Garage Door'
-          inverse: true
-      switches:
-        - zone: 1
-          name: 'Garage Switch'
-          momentary: 400
-    - id: !secret mac_id_k4
-      host: 192.168.0.194
-      port: 21011
-      switches:
-        - zone: 1
-          name: 'Bedroom Bell'
-          momentary: 5250
-
-#enabling ifttt
 ifttt:
   key: !secret ifttt_key
 
-#enabling ecobee
 ecobee:
   api_key: !secret ecobee_key
 
-#tplink switches
 tplink:
   switch:
-  - host: 192.168.0.180
-  - host: 192.168.0.181
+  - host: 192.168.50.180
+  - host: 192.168.50.181
 
-#Life360 Custom Component Implementation
-#
-#device_tracker:
-#  - platform: life360
-#    username: !secret life360_username
-#    password: !secret life360_password
-#    prefix: life360
-#    show_as_state: driving, moving, places
-#    driving_speed: 18
-#    max_gps_accuracy: 200
-#    max_update_wait:
-#      minutes: 45
-
-#Enabling Manual Alarm
-alarm_control_panel:
-  - platform: manual
-    name: "house alarm"
-    code: !secret house_alarm_code
-    trigger_time: 600
-    armed_home:
-      pending_time: 0
-      delay_time: 0
-    armed_away:
-      pending_time: 90
-      delay_time: 90
-    armed_night:
-      pending_time: 0
-      delay_time: 30
-    disarmed:
-      delay_time: 0
-    triggered:
-      pending_time: 0
-      
-#logger:
-#  default: info
+life360:
+  # MPH, assuming imperial units.
+  # If using metric (KPH), the equivalent would be 29.
+  driving_speed: 18
+  interval_seconds: 10
+  max_gps_accuracy: 200
+  max_update_wait:
+    minutes: 45
+  show_as_state: [driving, moving]
+  # Set comm error thresholds so first is not logged,
+  # second is logged as a WARNING, and third and fourth
+  # are logged as ERRORs.
+  warning_threshold: 2
+  error_threshold: 3
+  accounts:
+    - username: !secret life360_username
+      password: !secret life360_password
 
 notify:
   - platform: html5
     name: PushNotify
-    gcm_api_key: !secret gcm_api_key
-    gcm_sender_id: !secret gcm_sender_id
+    vapid_pub_key: !secret vapid_pub_key
+    vapid_prv_key: !secret vapid_prv_key
+    vapid_email: !secret vapid_email
   - platform: alexa_media
     name: alexa_media
 
@@ -276,30 +166,18 @@ alexa_media:
       - "Haylee's Alexa Apps"
       - "Haylee's 2nd Fire"
       - "My Dash"
-    
-#roku:
+
 mqtt:  
-  broker: 192.168.0.118  
+  broker: 192.168.50.118  
   port: 1883  
   client_id: home-assistant-1  
   username: "mqtt"  
   password: "mqtt"  
 
 light:  
-  - platform: mqtt
-    schema: json
-    name: "SN1 LED"  
-    state_topic: "bruh/sensornode1"  
-    command_topic: "bruh/sensornode1/set"  
-    brightness: true  
-    effect: true
-    effect_list: [flash] 
-    rgb: true  
-    optimistic: false  
-    qos: 0
   - platform: limitlessled
     bridges:
-    - host: 192.168.0.182
+    - host: 192.168.50.182
       groups:
       - number: 1
         type: white
@@ -313,3 +191,35 @@ light:
 #      - number: 4
 #        type: white
 #        name: KitchenLED4
+  - platform: mqtt
+    schema: json
+    name: "SN1 LED"  
+    state_topic: "bruh/sensornode1"  
+    command_topic: "bruh/sensornode1/set"  
+    brightness: true  
+    effect: true
+    effect_list: [flash] 
+    rgb: true
+    optimistic: false  
+    qos: 0
+  - platform: mqtt
+    schema: json
+    name: "SN2 LED"  
+    state_topic: "bruh/sensornode2"  
+    command_topic: "bruh/sensornode2/set"  
+    brightness: true  
+    effect: true
+    effect_list: [flash] 
+    rgb: true
+    optimistic: false  
+    qos: 0
+
+switch:
+  - platform: broadlink
+    host: 192.168.50.183
+    mac: !secret broadlinkMac
+
+#introduction:
+#roku:
+#logger:
+#  default: info

@@ -1,0 +1,91 @@
+access_token: !secret konnected_token
+devices:
+- id: !secret mac_id_k1
+  host: 192.168.50.191
+  port: 11308
+  binary_sensors:
+    - zone: 1
+      type: door
+      name: 'Front Door'
+    - zone: 2
+      type: door
+      name: 'Swinging Back Door'
+    - zone: 3
+      type: window
+      name: 'Great Room Windows'
+    - zone: 4
+      type: window
+      name: 'Master Bedroom Window'
+    - zone: 5
+      type: window
+      name: 'Office Bedroom Window'
+    - zone: 6
+      type: window
+      name: 'Middle Bedroom Window'
+  switches:
+    - zone: out
+      name: 'siren chirp'
+      momentary: 65
+      pause: 55
+      repeat: 4  
+    - zone: out
+      name: 'siren'
+- id: !secret mac_id_k2
+  host: 192.168.50.190
+  port: 22085
+  binary_sensors:
+    - zone: 1
+      type: window
+      name: 'Street Bedroom'
+    - zone: 2
+      type: window
+      name: 'Living Room Windows'
+    - zone: 3
+      type: door
+      name: 'House to Garage Door'
+    - zone: 4
+      type: door
+      name: 'Sliding Back Door'
+    - zone: 6
+      type: door
+      name: 'Exterior Garage Door'
+  switches:
+    - zone: 5
+      name: 'Beep Beep'
+      momentary: 65
+      pause: 55
+      repeat: 4  
+    - zone: 5
+      name: 'Warning'
+      momentary: 65
+      pause: 55
+      repeat: -1  
+- id: !secret mac_id_k3
+  host: 192.168.50.192
+  port: 9540
+  binary_sensors:
+    - zone: 2
+      type: garage_door
+      name: 'Garage Door'
+      inverse: true
+  switches:
+    - zone: 1
+      name: 'Garage Switch'
+      momentary: 400
+- id: !secret mac_id_k4
+  host: 192.168.50.194
+  port: 21011
+  switches:
+    - zone: 1
+      name: 'Bedroom Bell'
+      momentary: 5250
+- id: !secret mac_id_k6
+  host: 192.168.50.196
+  port: 21012
+  switches:
+    - zone: 3
+      name: 'Traffic Red'
+    - zone: 1
+      name: 'Traffic Yellow'
+    - zone: 2
+      name: 'Traffic Green'
